@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunrise Alarm</title>
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            transition: background-color 1500s ease-in-out; /* 25 minutes = 1500 seconds */
+        }
+    </style>
+</head>
+<body>
+<script>
+    function getBackgroundColorByTime(currentTime) {
+        // Define start, end, and reset times
+        const startTime = new Date();
+        startTime.setHours(7, 0, 0); // 7:00 AM
 
+        const endTime = new Date();
+        endTime.setHours(7, 25, 0); // 7:25 AM
+
+        const resetTime = new Date();
+        resetTime.setHours(8, 0, 0); // 8:00 AM
+
+        // Before 7:00 AM or after 8:00 AM, the screen stays black
+        if (currentTime < startTime || currentTime > resetTime) {
+            return "black";
+        }
+
+        // If between 7:25 AM and 8:00 AM, keep the screen orange
+        if (currentTime > endTime) {
+            return "rgb(255, 204, 102)"; // Final bright color after sunrise
+        }
+
+        // Calculate the progression of time from 7:00 AM to 7:25 AM
+        const timeProgress = (currentTime - startTime) / (endTime - startTime);
+
+        // Calculate color transition from black to sunrise (rgb(255, 204, 102))
+        const r = Math.floor(0 + timeProgress * (255 - 0));
+        const g = Math.floor(0 + timeProgress * (204 - 0));
+        const b = Math.floor(0 + timeProgress * (102 - 0));
+
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function updateBackground() {
+        const now = new Date();
+        document.body.style.backgroundColor = getBackgroundColorByTime(now);
+    }
+
+    // Update background color every second
+    setInterval(updateBackground, 1000);
+
+    // Run the function immediately to set the initial background
+    updateBackground();
+</script>
+</body>
+</html>
